@@ -1,8 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
+import { API_CONFIG } from '../config/api';
 
 type ProfileScreenProps = {
   onNavigate: (screen: string) => void;
@@ -18,6 +28,7 @@ interface UserProfile {
   height?: number;
   weight?: number;
   activityLevel?: string;
+  age?: number;
 }
 
 export default function ProfileScreen({ onNavigate }: ProfileScreenProps) {
@@ -32,10 +43,10 @@ export default function ProfileScreen({ onNavigate }: ProfileScreenProps) {
     try {
       const userId = await SecureStore.getItemAsync('user_id'); // Changed from 'userId' to 'user_id'
       const token = await SecureStore.getItemAsync('access_token');
-      
+
       console.log('🔍 Debug AccountScreen - userId:', userId);
       console.log('🔍 Debug AccountScreen - token:', token ? 'Token exists' : 'No token');
-      
+
       if (!userId) {
         console.log('❌ No userId found');
         Alert.alert('Error', 'User ID not found. Please login again.');
@@ -48,19 +59,19 @@ export default function ProfileScreen({ onNavigate }: ProfileScreenProps) {
         return;
       }
 
-      console.log('🌐 Making API request to:', `${process.env.BASE_URL}/api/profiles/${userId}`);
+      console.log('🌐 Making API request to:', `${API_CONFIG.BASE_URL}/api/profiles/${userId}`);
 
       const response = await axios.get(
-        `${process.env.BASE_URL}/api/profiles/${userId}`, // Changed URL to match LoginScreen
+        `${API_CONFIG.BASE_URL}/api/profiles/${userId}`, // Changed URL to match LoginScreen
         {
           headers: {
-            'Authorization': `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
-      
+
       console.log('✅ Profile API Response:', response.data);
-      
+
       // Handle response data structure
       const profileData = response.data.data || response.data;
       console.log('📋 Profile Data:', profileData);
@@ -69,7 +80,10 @@ export default function ProfileScreen({ onNavigate }: ProfileScreenProps) {
       console.error('❌ Error fetching profile:', error);
       console.error('❌ Error response:', error.response?.data);
       console.error('❌ Error status:', error.response?.status);
-      Alert.alert('Error', `Failed to load profile data: ${error.response?.data?.message || error.message}`);
+      Alert.alert(
+        'Error',
+        `Failed to load profile data: ${error.response?.data?.message || error.message}`
+      );
     } finally {
       setLoading(false);
     }
@@ -77,10 +91,10 @@ export default function ProfileScreen({ onNavigate }: ProfileScreenProps) {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
     });
   };
 
@@ -122,7 +136,9 @@ export default function ProfileScreen({ onNavigate }: ProfileScreenProps) {
             </View>
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Profile</Text>
-          <TouchableOpacity style={styles.editButton} onPress={() => onNavigate('ProfileFormScreen')}>
+          <TouchableOpacity
+            style={styles.editButton}
+            onPress={() => onNavigate('ProfileFormScreen')}>
             <View style={styles.editButtonContainer}>
               <Text style={styles.editIcon}>⚙️</Text>
             </View>
@@ -149,11 +165,15 @@ export default function ProfileScreen({ onNavigate }: ProfileScreenProps) {
           <View style={styles.statsContainer}>
             <View style={styles.statItem}>
               <Text style={styles.statLabel}>Weight</Text>
-              <Text style={styles.statValue}>{profile.weight ? `${profile.weight} kg` : 'Not set'}</Text>
+              <Text style={styles.statValue}>
+                {profile.weight ? `${profile.weight} kg` : 'Not set'}
+              </Text>
             </View>
             <View style={styles.statItem}>
               <Text style={styles.statLabel}>Height</Text>
-              <Text style={styles.statValue}>{profile.height ? `${profile.height} cm` : 'Not set'}</Text>
+              <Text style={styles.statValue}>
+                {profile.height ? `${profile.height} cm` : 'Not set'}
+              </Text>
             </View>
             <View style={styles.statItem}>
               <Text style={styles.statLabel}>Activity Level</Text>
@@ -194,23 +214,27 @@ export default function ProfileScreen({ onNavigate }: ProfileScreenProps) {
 
             <View style={styles.fullTableRow}>
               <Text style={styles.fullTableLabel}>Height</Text>
-              <Text style={styles.fullTableValue}>{profile.height ? `${profile.height} cm` : 'Not set'}</Text>
+              <Text style={styles.fullTableValue}>
+                {profile.height ? `${profile.height} cm` : 'Not set'}
+              </Text>
             </View>
 
             <View style={styles.fullTableRow}>
               <Text style={styles.fullTableLabel}>Weight</Text>
-              <Text style={styles.fullTableValue}>{profile.weight ? `${profile.weight} kg` : 'Not set'}</Text>
+              <Text style={styles.fullTableValue}>
+                {profile.weight ? `${profile.weight} kg` : 'Not set'}
+              </Text>
             </View>
 
             <View style={[styles.fullTableRow, styles.lastFullTableRow]}>
               <Text style={styles.fullTableLabel}>Activity Level</Text>
-              <Text style={styles.fullTableValue}>{getActivityLevelDisplay(profile.activityLevel)}</Text>
+              <Text style={styles.fullTableValue}>
+                {getActivityLevelDisplay(profile.activityLevel)}
+              </Text>
             </View>
           </View>
         </View>
       </ScrollView>
-
-      
     </View>
   );
 }

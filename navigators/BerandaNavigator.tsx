@@ -82,8 +82,8 @@ export default function BerandaNavigator() {
           />
           <Tab.Screen
             name="Add"
-            options={({ navigation }) => ({
-              tabBarLabel: '',
+            component={AddPlanScreen}
+            options={{
               tabBarButton: (props) => (
                 <TouchableOpacity
                   style={{
@@ -91,8 +91,8 @@ export default function BerandaNavigator() {
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}
-                  onPress={() => {
-                    navigation.navigate('AddPlan');
+                  onPress={(e) => {
+                    props.onPress && props.onPress(e);
                   }}
                 >
                   <View
@@ -114,10 +114,17 @@ export default function BerandaNavigator() {
                   </View>
                 </TouchableOpacity>
               ),
-            })}
-          >
-            {(props) => <HomeScreen {...props} onNavigate={(screen) => props.navigation.navigate(screen)} />}
-          </Tab.Screen>
+            }}
+          />
+          
+          <Tab.Screen
+            name="Upload"
+            component={UploadImageScreen}
+            options={{
+              tabBarLabel: 'Upload'
+            }}
+          />
+          
           <Tab.Screen
             name="Account"
             options={{
@@ -126,20 +133,34 @@ export default function BerandaNavigator() {
           >
             {(props) => <AccountScreen {...props} onNavigate={(screen) => props.navigation.navigate(screen)} />}
           </Tab.Screen>
-          <Tab.Screen
-            name="Upload"
-            component={UploadImageScreen}
+          
+          {/* Hapus screen duplikat AddPlan ini */}
+          {/* <Tab.Screen
+            name="AddPlan"
+            component={AddPlanScreen}
             options={{
-              tabBarLabel: 'Upload'
+              tabBarButton: () => null,
+              headerShown: false,
             }}
-          />
-          <Tab.Screen
+          /> */}
+          
+          {/* <Tab.Screen
             name="ProfileFormScreen"
             component={ProfileFormScreen}
             options={{
-              tabBarButton: () => null, // Menyembunyikan dari tab bar
+              tabBarButton: () => null,
+              headerShown: false,
             }}
-          />
+          /> */}
+          
+          {/* <Tab.Screen
+            name="UploadImageScreen"
+            component={UploadImageScreen}
+            options={{
+              tabBarButton: () => null,
+              headerShown: false,
+            }}
+          /> */}
         </Tab.Navigator>
       </SafeAreaView>
     </SafeAreaProvider>

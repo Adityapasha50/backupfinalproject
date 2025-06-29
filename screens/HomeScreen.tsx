@@ -355,16 +355,15 @@ export default function HomeScreen({ onNavigate }: HomeScreenProps) {
         {/* Action Cards */}
         <View style={styles.actionSection}>
           <View style={styles.actionRow}>
-            <TouchableOpacity style={styles.actionCard} onPress={() => onNavigate('AddPlan')}>
+            <TouchableOpacity style={styles.actionCard} onPress={() => onNavigate('Add')}>
               <Image
                 source={{
                   uri: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=200&h=120&fit=crop',
                 }}
                 style={styles.actionImage}
               />
-              {/* Action Cards Gradient - Minimalized */}
               <LinearGradient
-                colors={['transparent', 'rgba(34, 197, 94, 0.2)', 'rgba(34, 197, 94, 0.6)']}
+                colors={['transparent', 'rgba(139, 74, 107, 0.2)', 'rgba(139, 74, 107, 0.7)']}
                 style={styles.actionGradient}
               />
               <View style={styles.actionOverlay}>
@@ -380,7 +379,6 @@ export default function HomeScreen({ onNavigate }: HomeScreenProps) {
                 }}
                 style={styles.actionImage}
               />
-              {/* Action Cards Gradient - Minimalized */}
               <LinearGradient
                 colors={['transparent', 'rgba(34, 197, 94, 0.2)', 'rgba(34, 197, 94, 0.6)']}
                 style={styles.actionGradient}
